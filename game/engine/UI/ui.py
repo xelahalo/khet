@@ -1,7 +1,6 @@
 from abc import ABC, abstractclassmethod
 
-class Rotatable(ABC):
-    
+class UI:
     @abstractclassmethod
-    def rotate(self):
+    def draw(self):
         pass

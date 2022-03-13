@@ -1,10 +1,10 @@
 from abc import ABC, abstractclassmethod
 
-from game.khet.model.pieces.piece import AbstractPiece
+from game.khet.model.pieces.piece import Piece
 
-class Stackable(AbstractPiece):
-    def __init__(self, player, initial_count):
-        super.__init__(player)
+class Stackable(Piece):
+    def __init__(self, color, initial_count):
+        super().__init__(color, 0)
         self.count = initial_count
 
     def increment(self):

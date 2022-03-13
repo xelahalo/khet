@@ -1,7 +1,6 @@
 from abc import ABC, abstractclassmethod
 
-class Rotatable(ABC):
-    
+class Strategy(ABC):
     @abstractclassmethod
-    def rotate(self):
+    def get_action(self, prev_actions):
         pass

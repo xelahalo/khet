@@ -1,5 +1,4 @@
-from enum import Enum, IntFlag
-
+from enum import Enum
 
 class Rotate(Enum):
     CLOCKWISE = 1
@@ -24,8 +23,8 @@ class TileChar(Enum):
     DJED_CC = '\\'
     PYRAMID_UL = '◪'
     PYRAMID_UR = '⬕'
-    PYRAMID_DL = '⬔'
     PYRAMID_DR = '◩'
+    PYRAMID_DL = '⬔'
     OBELISK = '▨'
     OBELISK_STACKED = '▩' 
 
