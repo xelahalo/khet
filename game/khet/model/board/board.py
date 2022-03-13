@@ -30,4 +30,9 @@ class Board:
     def _parse_piece(self, c):
         return self._piece_factory.create(c)
                 
+    def print_board(self):
+        for i in range(len(self._board)):
+            for j in range(len(self._board[i])):
+                print(self._board[i][j], end=' ')
+            print(' ')
 

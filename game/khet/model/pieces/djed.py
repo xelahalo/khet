@@ -9,10 +9,10 @@ class Djed(Piece):
         pass
 
     def __str__(self):
-        return super().__str__(self._get_char())
+        return super().draw(self._get_char())
 
-    def _get_char(self, r):
+    def _get_char(self):
         if self._rotation == 0:
-            return TileChar.DJED_C
+            return TileChar.DJED_C.value
         else:
-            return TileChar.DJED_CC
+            return TileChar.DJED_CC.value

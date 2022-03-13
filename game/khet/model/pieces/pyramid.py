@@ -9,15 +9,15 @@ class Pyramid(Piece):
         pass
 
     def __str__(self):
-        return super().__str__(self._get_char())
+        return super().draw(self._get_char())
 
     def _get_char(self):
         r = self._rotation
         if r == 0:
-            return TileChar.PYRAMID_UL
+            return TileChar.PYRAMID_UL.value
         elif r == 90:
-            return TileChar.PYRAMID_UR
+            return TileChar.PYRAMID_UR.value
         elif r == 180:
-            return TileChar.PYRAMID_DR
+            return TileChar.PYRAMID_DR.value
         else:
-            return TileChar.PYRAMID_DL
+            return TileChar.PYRAMID_DL.value

@@ -10,6 +10,5 @@ class Piece(ABC):
     def on_hit(self, direction):
         pass
 
-    @abstractclassmethod
-    def __str__(self, char):
-        return self._color + char + Color.RESET
+    def draw(self, char):
+        return self._color.value + str(char) + Color.RESET.value

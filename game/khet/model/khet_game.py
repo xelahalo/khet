@@ -8,14 +8,14 @@ class KhetGame:
         self._engine = engine
 
     @property
-    def get_board(self):
+    def board(self):
         return self._board
 
     def play(self):
         while(not self._is_finished()):
             player = self._get_next_player()
-            action = player.get_action([])
             self._engine.draw(self)
+            action = player.get_action([])
             self._eval_action(action)
 
         winner = self._get_winner()
