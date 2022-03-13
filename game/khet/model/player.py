@@ -1,7 +1,7 @@
-from abc import abstractclassmethod
+from abc import ABC, abstractclassmethod
 
 
-class Player:
+class Player(ABC):
     def __init__(self):
         super.__init__()
 

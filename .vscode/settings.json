@@ -1,0 +1,6 @@
+{
+    "python.analysis.extraPaths": [
+        "./game/util",
+        "./game/khet/model"
+    ]
+}

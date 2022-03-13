@@ -1,0 +1,2 @@
+class Pharaoh:
+    pass
