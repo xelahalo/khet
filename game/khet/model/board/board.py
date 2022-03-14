@@ -2,11 +2,27 @@ from game.khet.model.board.tile import Tile
 from game.util.configurations import BOARD_MASK
 from game.util.constants import Color
 from game.khet.factory.piece_factory import PieceFactory
+from game.khet.model.pieces.piece import Piece
 
 class Board:
     def __init__(self, config):
         self._piece_factory = PieceFactory()
-        self._board = self._parse_board(config)
+        self._native_board = self._parse_board(config)
+
+    @property
+    def native_board(self):
+        return self._native_board
+
+    @native_board.setter
+    def native_board(self, value):
+        self._native_board = value
+
+    def can_move_piece(self, point, color):
+        piece = self._native_board[point.i][point.j]
+        return isinstance(piece, Piece) and color == piece.color
+
+    def can_move_piece_to(self, piece, point):
+        return True
 
     def _parse_board(self, config):
         board = []
@@ -29,10 +45,4 @@ class Board:
 
     def _parse_piece(self, c):
         return self._piece_factory.create(c)
-                
-    def print_board(self):
-        for i in range(len(self._board)):
-            for j in range(len(self._board[i])):
-                print(self._board[i][j], end=' ')
-            print(' ')
 

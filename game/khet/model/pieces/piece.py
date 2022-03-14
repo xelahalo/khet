@@ -6,9 +6,21 @@ class Piece(ABC):
         self._color = color
         self._rotation = rotation
 
+    @property
+    def color(self):
+        return self._color
+
+    @property
+    def rotation(self):
+        return self._rotation
+
+    @rotation.setter
+    def rotation(self, value):
+        self._rotation = value
+
     @abstractclassmethod
     def on_hit(self, direction):
         pass
 
-    def draw(self, char):
+    def __str__(self, char):
         return self._color.value + str(char) + Color.RESET.value

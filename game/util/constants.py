@@ -1,8 +1,13 @@
 from enum import Enum
 
+class ActionType(Enum):
+    MOVE = 'move',
+    ROTATE = 'rotate'
+
 class Rotate(Enum):
     CLOCKWISE = 1
-    COUNTER_CLOCKWISE = -1
+    COUNTER_CLOCKWISE = 0
+    NO_ROTATION = -1
 
 class Direction(Enum):
     LEFT = 0

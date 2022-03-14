@@ -9,4 +9,4 @@ class Obelisk(Stackable):
         pass
 
     def __str__(self):
-        return super().draw(TileChar.OBELISK.value)
+        return super().__str__(TileChar.OBELISK_STACKED.value if self._is_stacked() else TileChar.OBELISK.value)

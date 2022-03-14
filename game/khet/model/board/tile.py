@@ -5,7 +5,7 @@ class Tile:
         self._color = color
 
     @property
-    def get_color(self):
+    def color(self):
         return self._color
 
     def __str__(self):

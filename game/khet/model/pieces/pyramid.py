@@ -9,7 +9,7 @@ class Pyramid(Piece):
         pass
 
     def __str__(self):
-        return super().draw(self._get_char())
+        return super().__str__(self._get_char())
 
     def _get_char(self):
         r = self._rotation

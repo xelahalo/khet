@@ -9,4 +9,4 @@ class Pharaoh(Piece):
         pass
 
     def __str__(self):
-        return super().draw(TileChar.PHARAOH.value)
+        return super().__str__(TileChar.PHARAOH.value)

@@ -1,35 +1,31 @@
+import copy
 from game.khet.model.board.board import Board
 
 class KhetGame:
-    def __init__(self, p1, p2, config, engine):
+    def __init__(self, config):
         self._board = Board(config)
-        self._players = [p1, p2]
+        self._players = []
         self._current_player = 0
-        self._engine = engine
 
     @property
     def board(self):
         return self._board
 
-    def play(self):
-        while(not self._is_finished()):
-            player = self._get_next_player()
-            self._engine.draw(self)
-            action = player.get_action([])
-            self._eval_action(action)
+    def add_player(self, player):
+        self._players.append(player)
 
-        winner = self._get_winner()
-        return winner
+    def copy(self):
+        return copy.deepcopy(self)
 
-    def _get_winner(self):
+    def get_winner(self):
         pass
 
-    def _is_finished(self):
+    def is_finished(self):
         return False
 
-    def _eval_action(self, action):
+    def set_action(self, action):
         pass
 
-    def _get_next_player(self):
+    def get_next_player(self):
         self._current_player = 1 - self._current_player
         return self._players[self._current_player]
