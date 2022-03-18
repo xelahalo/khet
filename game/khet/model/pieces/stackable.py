@@ -15,5 +15,5 @@ class Stackable(Piece):
         self._count = self._count - 1
         return self._count > 0
 
-    def _is_stacked(self):
+    def is_stacked(self):
         return self._count > 1

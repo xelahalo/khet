@@ -3,10 +3,10 @@ from game.util.configurations import BOARD_MASK
 from game.util.constants import COLOR_MASKS, ActionType, Color
 from game.khet.factory.piece_factory import PieceFactory
 from game.khet.model.pieces.piece import Piece
-from pieces.djed import Djed
-from pieces.obelisk import Obelisk
-from pieces.pyramid import Pyramid
-from pieces.stackable import Stackable
+from game.khet.model.pieces.djed import Djed
+from game.khet.model.pieces.obelisk import Obelisk
+from game.khet.model.pieces.pyramid import Pyramid
+from game.khet.model.pieces.stackable import Stackable
 
 class Board:
     def __init__(self, config):
