@@ -1,8 +1,12 @@
 from game.khet.model.board.tile import Tile
 from game.util.configurations import BOARD_MASK
-from game.util.constants import Color
+from game.util.constants import COLOR_MASKS, ActionType, Color
 from game.khet.factory.piece_factory import PieceFactory
 from game.khet.model.pieces.piece import Piece
+from pieces.djed import Djed
+from pieces.obelisk import Obelisk
+from pieces.pyramid import Pyramid
+from pieces.stackable import Stackable
 
 class Board:
     def __init__(self, config):
@@ -21,8 +25,33 @@ class Board:
         piece = self._native_board[point.i][point.j]
         return isinstance(piece, Piece) and color == piece.color
 
-    def can_move_piece_to(self, piece, point):
+    def can_move_piece_to(self, origin, destination, color, action_type):
+        color_mask = COLOR_MASKS.get(color)
+        origin_piece = self._native_board[origin.i][origin.j]
+        dest_obj = self._native_board[destination.i][destination.j]
+
+        # wall is chosen
+        if (BOARD_MASK[destination.i][destination.j] < 0):
+            return False
+        # tile is of the other player's color
+        elif (BOARD_MASK[destination.i + 1][destination.j + 1] != color_mask):
+            return False
+        # tile is occupied by another piece
+        elif (isinstance(dest_obj, Piece)):
+            if(not isinstance(origin_piece, Djed) and not isinstance(origin_piece, Stackable)):
+                return False
+        # djeds can switch places with pyramids or obelisks
+        elif (isinstance(origin_piece, Djed) and not(isinstance(dest_obj, Pyramid) or isinstance(dest_obj, Obelisk))):
+            return False
+        elif (isinstance(dest_obj, Stackable)):
+            if (not action_type == ActionType.UNSTACK or dest_obj.is_stacked()):
+                return False
+
         return True
+
+    def can_unstack_piece(self, point):
+        obj = self._native_board[point.i][point.j]
+        return isinstance(obj, Stackable) and obj.is_stacked()
 
     def _parse_board(self, config):
         board = []

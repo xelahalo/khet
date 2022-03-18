@@ -3,6 +3,7 @@ from enum import Enum
 class ActionType(Enum):
     MOVE = 'move',
     ROTATE = 'rotate'
+    UNSTACK = 'unstack'
 
 class Rotate(Enum):
     CLOCKWISE = 1
@@ -35,6 +36,14 @@ class TileChar(Enum):
 
 class Color(Enum):
     RESET = '\u001b[0m'
-    BLUE = '\u001b[31m'
-    RED = '\u001b[34m'
+    RED = '\u001b[31m'
+    GREEN = '\u001b[32m'
+    BLUE = '\u001b[34m'
     WHITE = '\u001b[37m'
+
+TURN_ORDER = [Color.BLUE, Color.RED]
+
+COLOR_MASKS = {
+    Color.RED: 1,
+    Color.BLUE: 2
+}

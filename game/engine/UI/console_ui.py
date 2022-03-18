@@ -13,16 +13,17 @@ class ConsoleUI(UI):
 
     def wait_for_action(self, color, board):
         origin = self._input_wrapper(lambda: self._choose_origin(color, board))
-        action_type = self._input_wrapper(lambda: self._choose_action_type())
+        action_type = self._input_wrapper(lambda: self._choose_action_type(origin, board))
         destination = None
         rotation = None
 
         if(action_type == ActionType.MOVE):
-            destination = self._input_wrapper(lambda: self._choose_destination(color, board, origin))
+            destination = self._input_wrapper(lambda: self._choose_destination(color, board, origin, action_type))
             return Action(origin, destination)
         else:
             rotation = self._input_wrapper(lambda: self._choose_rotation())
             return Action(origin, rotate=rotation)
+
 
     def _print_board(self, game):
         board = game.board.native_board
@@ -40,10 +41,10 @@ class ConsoleUI(UI):
         point = Point(int(inp[0]), int(inp[1]))
         return point if board.can_move_piece(point, color) else None
 
-    def _choose_destination(self, color, board, origin):
+    def _choose_destination(self, color, board, origin, action_type):
         inp = input(MESSAGES.get('TILE_TO_MOVE_TO')).split(',')
         dest = Point(int(inp[0]), int(inp[1]))
-        return dest if board.can_move_piece_to(origin, dest, color) else None
+        return dest if board.can_move_piece_to(origin, dest, color, action_type) else None
 
     def _choose_rotation(self):
         inp = int(input(MESSAGES.get('ROTATION_DEGREE')))
@@ -55,14 +56,15 @@ class ConsoleUI(UI):
         else:
             raise Exception()
 
-    def _choose_action_type(self):
-        inp = input(MESSAGES.get('ROTATE_OR_MOVE')).lower()
-        print(ActionType.MOVE.value)
-        print(ActionType.ROTATE.value)
+    def _choose_action_type(self, origin, board):
+        inp = input(MESSAGES.get('ROTATE_OR_MOVE_OR_UNSTACK')).lower()
+
         if (inp == ActionType.MOVE.value):
             return ActionType.MOVE
         elif (inp == ActionType.ROTATE.value):
-            return Action.ROTATE
+            return ActionType.ROTATE
+        elif (inp == ActionType.UNSTACK.value and board.can_unstack_piece(origin)):
+            return ActionType.UNSTACK
         else:
             raise Exception()
     
