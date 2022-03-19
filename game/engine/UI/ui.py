@@ -6,5 +6,5 @@ class UI:
         pass
 
     @abstractclassmethod
-    def wait_for_action(self, color, board):
+    def get_action(self, color, board):
         pass

@@ -1,7 +1,7 @@
 # https://www.ultraboardgames.com/khet-the-laser-game/game-rules.php
 from game.engine.engine import Engine
 from game.util.configurations import CLASSIC
-from game.util.constants import Color, TURN_ORDER
+from game.util.constants import TURN_ORDER
 from game.engine.UI.console_ui import ConsoleUI
 from game.khet.strategies.human_strategy import HumanStrategy
 from game.khet.model.khet_game import KhetGame

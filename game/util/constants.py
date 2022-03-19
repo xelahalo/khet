@@ -1,7 +1,8 @@
 from enum import Enum
+from tkinter import HORIZONTAL
 
 class ActionType(Enum):
-    MOVE = 'move',
+    MOVE = 'move'
     ROTATE = 'rotate'
     UNSTACK = 'unstack'
 
@@ -15,14 +16,9 @@ class Direction(Enum):
     UP = 1
     RIGHT = 2
     DOWN = 3
-    UP_LEFT = 4
-    UP_RIGHT = 5
-    DOWN_LEFT = 6
-    DOWN_RIGHT = 7
+    STRAIGHT = 4
 
 class TileChar(Enum):
-    WALL_HORIZONTAL = '|'
-    WALL_VERTICAL = '-'
     TILE = '▢'
     PHARAOH = '▣'
     DJED_C = '/'
@@ -33,6 +29,12 @@ class TileChar(Enum):
     PYRAMID_DL = '⬔'
     OBELISK = '▨'
     OBELISK_STACKED = '▩' 
+
+class LaserChar(Enum):
+    VERTICAL = '|'
+    HORIZONTAL = '-'
+    ROTATE_C = '/'
+    ROTATE_CC = '\\'
 
 class Color(Enum):
     RESET = '\u001b[0m'
@@ -47,3 +49,45 @@ COLOR_MASKS = {
     Color.RED: 1,
     Color.BLUE: 2
 }
+
+DIR_LASER_CHAR_MAP = {
+    Direction.LEFT: {
+        Direction.STRAIGHT: LaserChar.HORIZONTAL,
+        Direction.UP: LaserChar.ROTATE_CC,
+        Direction.DOWN: LaserChar.ROTATE_C
+    },
+    Direction.UP: {
+        Direction.STRAIGHT: LaserChar.VERTICAL,
+        Direction.LEFT: LaserChar.ROTATE_CC,
+        Direction.RIGHT: LaserChar.ROTATE_C
+    },
+    Direction.RIGHT: {
+        Direction.STRAIGHT: LaserChar.HORIZONTAL,
+        Direction.UP: LaserChar.ROTATE_C,
+        Direction.DOWN: LaserChar.ROTATE_CC
+    },
+    Direction.DOWN: {
+        Direction.STRAIGHT: LaserChar.VERTICAL,
+        Direction.LEFT: LaserChar.ROTATE_C,
+        Direction.RIGHT: LaserChar.ROTATE_CC
+    }
+}
+
+PYRAMID_DIRECTION_MAP =[
+    {
+        Direction.DOWN: Direction.LEFT,
+        Direction.RIGHT: Direction.UP
+    },
+    {
+        Direction.DOWN: Direction.RIGHT,
+        Direction.LEFT: Direction.UP
+    },
+    {
+        Direction.LEFT: Direction.DOWN,
+        Direction.UP: Direction.RIGHT
+    },
+    {
+        Direction.RIGHT: Direction.DOWN,
+        Direction.UP: Direction.LEFT
+    }
+]

@@ -6,4 +6,4 @@ class HumanStrategy(Strategy):
         self._ui = ui
 
     def get_action(self, prev_actions):
-        action = self._ui.wait_for_action(self._color, self._board)
+        return self._ui.get_action(self._color, self._board)

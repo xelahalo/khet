@@ -19,7 +19,11 @@ class Piece(ABC):
         self._rotation = value
 
     @abstractclassmethod
-    def on_hit(self, direction):
+    def on_hit(self, source_dir):
+        """
+        Returns:
+        True if it should be destroyed, reflected direction otherwise
+        """
         pass
 
     def __str__(self, char):

@@ -21,7 +21,7 @@ class PieceFactory:
         color = Color.RED if piece[0] == 'R' else Color.BLUE
         char = piece[1]
             
-        (activator, descriptor) = _TYPE_MAP.get(TileChar._value2member_map_[char])
+        (activator, descriptor) = _TYPE_MAP[TileChar._value2member_map_[char]]
         piece = activator(color, descriptor)
         return piece
         

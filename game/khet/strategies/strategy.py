@@ -6,7 +6,7 @@ class Strategy(ABC):
         self._board = board
 
     @abstractclassmethod
-    def get_action(self, game, prev_actions):
+    def get_action(self, game):
         pass
 
     @property

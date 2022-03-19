@@ -21,6 +21,9 @@ class Board:
     def native_board(self, value):
         self._native_board = value
 
+    def out_of_bounds(self, i, j):
+        return i < 0 or j < 0 or i >= len(self._native_board) or j >= len(self._native_board[i])
+
     def can_move_piece(self, point, color):
         piece = self._native_board[point.i][point.j]
         return isinstance(piece, Piece) and color == piece.color
@@ -31,20 +34,26 @@ class Board:
         dest_obj = self._native_board[destination.i][destination.j]
 
         # wall is chosen
-        if (BOARD_MASK[destination.i][destination.j] < 0):
+        if BOARD_MASK[destination.i][destination.j] < 0:
+            return False
+        # destination is not within 1 tile
+        elif abs(origin.i - destination.i) > 1 or abs(origin.j - destination.j) > 1:
+            return False
+        # can't stay in place
+        elif origin.i == destination.i and origin.j == destination.j:
             return False
         # tile is of the other player's color
-        elif (BOARD_MASK[destination.i + 1][destination.j + 1] != color_mask):
+        elif BOARD_MASK[destination.i + 1][destination.j + 1] != color_mask:
             return False
         # tile is occupied by another piece
-        elif (isinstance(dest_obj, Piece)):
-            if(not isinstance(origin_piece, Djed) and not isinstance(origin_piece, Stackable)):
+        elif isinstance(dest_obj, Piece):
+            if not isinstance(origin_piece, Djed) and not isinstance(origin_piece, Stackable):
                 return False
         # djeds can switch places with pyramids or obelisks
-        elif (isinstance(origin_piece, Djed) and not(isinstance(dest_obj, Pyramid) or isinstance(dest_obj, Obelisk))):
+        elif isinstance(origin_piece, Djed) and not(isinstance(dest_obj, Pyramid) or isinstance(dest_obj, Obelisk)):
             return False
-        elif (isinstance(dest_obj, Stackable)):
-            if (not action_type == ActionType.UNSTACK or dest_obj.is_stacked()):
+        elif isinstance(dest_obj, Stackable):
+            if not action_type == ActionType.UNSTACK or dest_obj.is_stacked():
                 return False
 
         return True

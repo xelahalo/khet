@@ -4,13 +4,19 @@ class Engine:
         self._ui = ui
 
     def play(self):
-        while(not self._game.is_finished()):
-            player = self._game.get_next_player()
-            
-            self._ui.draw(self._game, player)
+        player = self._game.get_first_player()
+        self._ui.draw(self._game, player, initial=True)
 
-            action = player.get_action([])
+        while not self._game.is_finished():
+            self._ui.set_teminal_color(player.color)
+
+            player = self._game.get_next_player()
+
+            action = player.get_action(self._game.copy())    
+
             self._game.set_action(action)
+
+            self._ui.draw(self._game, player)
 
         winner = self._game.get_winner()
         return winner

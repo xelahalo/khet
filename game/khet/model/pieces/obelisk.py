@@ -5,8 +5,8 @@ class Obelisk(Stackable):
     def __init__(self, color, initial_count):
         super().__init__(color, initial_count)
 
-    def on_hit(self, direction):
-        pass
+    def on_hit(self, _):
+        return True
 
     def __str__(self):
-        return super().__str__(TileChar.OBELISK_STACKED.value if self._is_stacked() else TileChar.OBELISK.value)
+        return super().__str__(TileChar.OBELISK_STACKED.value if self.is_stacked() else TileChar.OBELISK.value)
