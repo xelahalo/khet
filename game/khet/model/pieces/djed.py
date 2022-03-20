@@ -13,6 +13,9 @@ class Djed(Piece, Rotatable):
     def rotate(self, _):
         self.rotation = 90 - self.rotation
 
+    def get_value(self):
+        return 0
+
     def __str__(self):
         return super().__str__(self._get_char())
 

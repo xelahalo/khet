@@ -90,7 +90,6 @@ class Board:
             board.append(row)
         return board
 
-
     def _parse_piece(self, c):
         return self._piece_factory.create(c)
 

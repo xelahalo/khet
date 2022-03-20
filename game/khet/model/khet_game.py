@@ -8,18 +8,32 @@ from game.khet.model.point import Point
 from game.khet.model.pieces.djed import Djed
 from game.khet.model.pieces.obelisk import Obelisk
 from game.khet.model.pieces.pyramid import Pyramid
+from game.khet.model.pieces.pharaoh import Pharaoh
 
 class KhetGame:
     def __init__(self, config):
         self._config = config
         self._board = Board(config)
         self._players = []
-        self._scores = [0, 0]
         self._current_player = 0
+        self._laser_path = []
+        self._is_finished = False
+        self._scores = {
+            Color.BLUE: 0,
+            Color.RED: 0
+        }
 
     @property
     def board(self):
         return self._board
+
+    @property
+    def laser_path(self):
+        return self._laser_path
+
+    @property
+    def is_finished(self):
+        return self._is_finished
 
     def add_player(self, player):
         self._players.append(player)
@@ -28,10 +42,7 @@ class KhetGame:
         return copy.deepcopy(self)
 
     def get_winner(self):
-        return self._players[0] if self._scores[0] > self._scores[1] else self._players[1]
-
-    def is_finished(self):
-        return False
+        return self._players[0] if self._scores[Color.BLUE] > self._scores[Color.RED] else self._players[1]
 
     def set_action(self, action):
         """
@@ -65,8 +76,20 @@ class KhetGame:
                 else:
                     self.board.update_obj(action.destination, Obelisk(origin.color, 1))
 
-    def evaluate(self):
-        pass
+    def evaluate(self, player):
+        pos_of_obj = self.fire_laser(player)
+
+        if pos_of_obj is not None:
+            obj = self.board.get_obj(pos_of_obj)
+            self._scores[player.color] = self._scores[player.color] + (obj.get_value() * (1 if player.color != obj.color else -1))
+
+            if isinstance(obj, Obelisk) and obj.is_stacked():
+                obj.decrement()
+            else:
+                self.board.update_obj(pos_of_obj, self.board.parse_tile(pos_of_obj.i, pos_of_obj.j))
+
+            if isinstance(obj, Pharaoh):
+                self._is_finished = True
 
     def get_first_player(self):
         return self._players[0]
@@ -76,7 +99,7 @@ class KhetGame:
         self._current_player = 1 - self._current_player
         return player
 
-    def build_laser_path(self, player):
+    def fire_laser(self, player):
         board = self._board.native_board
         i, j, d = 0, 0, Direction.DOWN
 
@@ -96,7 +119,8 @@ class KhetGame:
                 i = i + 1
 
             if self._board.out_of_bounds(i,j):
-                return path
+                self._laser_path = path
+                return None
 
             obj = board[i][j]
             laserchar = DIR_LASER_CHAR_MAP[d][Direction.STRAIGHT]
@@ -104,7 +128,8 @@ class KhetGame:
             if not isinstance(obj, Tile):
                 hit_result = obj.on_hit(d)
                 if hit_result == True:
-                    return path
+                    self._laser_path = path
+                    return Point(i,j)
                 else:
                     laserchar = DIR_LASER_CHAR_MAP[d][hit_result]
                     d = hit_result

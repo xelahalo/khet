@@ -7,6 +7,9 @@ class Stackable(Piece):
         super().__init__(color, 0)
         self._count = initial_count
 
+    def get_value(self):
+        return 25000 if self.is_stacked() else 10000
+
     def increment(self):
         self._count = self._count + 1
         return True

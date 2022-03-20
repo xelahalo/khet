@@ -18,6 +18,9 @@ class Pyramid(Piece, Rotatable):
     def rotate(self, rotation):
         self.rotation = (self.rotation + (90 * rotation.value)) % 360
 
+    def get_value(self):
+        return 75000
+
     def __str__(self):
         return super().__str__(self._get_char())
 

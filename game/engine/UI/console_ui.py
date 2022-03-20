@@ -6,10 +6,8 @@ from game.util.localization import MESSAGES
 from game.util.constants import ActionType, Rotate
 
 class ConsoleUI(UI):
-    def draw(self, game, player, initial = False):
-        if not initial:
-            self._print_laser(game, player)
-
+    def draw(self, game):
+        self._print_laser(game)
         self._print_board(game.board.native_board)
 
     def get_action(self, color, board):
@@ -70,12 +68,14 @@ class ConsoleUI(UI):
         
         return ret
 
-    def _print_laser(self, game, player):
-        path = game.build_laser_path(player)
+    def _print_laser(self, game):
+        if not game.laser_path:
+            return
+
         g = game.copy()
         board = g.board.native_board
-
-        for point, char in path:
+        
+        for point, char in game.laser_path:
             board[point.i][point.j] = char
 
         self._print_board(board)

@@ -19,6 +19,10 @@ class Piece(ABC):
         self._rotation = value
 
     @abstractclassmethod
+    def get_value(self):
+        pass
+
+    @abstractclassmethod
     def on_hit(self, source_dir):
         """
         Returns:
