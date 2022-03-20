@@ -18,10 +18,7 @@ class KhetGame:
         self._current_player = 0
         self._laser_path = []
         self._is_finished = False
-        self._scores = {
-            Color.BLUE: 0,
-            Color.RED: 0
-        }
+        self._score = 0 # player 1 is positive player 2 is negative (zero-sum game)
 
     @property
     def board(self):
@@ -35,14 +32,11 @@ class KhetGame:
     def is_finished(self):
         return self._is_finished
 
-    def add_player(self, player):
-        self._players.append(player)
-
     def copy(self):
         return copy.deepcopy(self)
 
     def get_winner(self):
-        return self._players[0] if self._scores[Color.BLUE] > self._scores[Color.RED] else self._players[1]
+        return self._players[0] if self._score > 0 else self._players[1]
 
     def set_action(self, action):
         """
@@ -81,7 +75,7 @@ class KhetGame:
 
         if pos_of_obj is not None:
             obj = self.board.get_obj(pos_of_obj)
-            self._scores[player.color] = self._scores[player.color] + (obj.get_value() * (1 if player.color != obj.color else -1))
+            self._score = self._score + (obj.get_value() * (1 if obj.color == Color.RED else -1))
 
             if isinstance(obj, Obelisk) and obj.is_stacked():
                 obj.decrement()
@@ -91,13 +85,19 @@ class KhetGame:
             if isinstance(obj, Pharaoh):
                 self._is_finished = True
 
-    def get_first_player(self):
-        return self._players[0]
-
     def get_next_player(self):
         player = self._players[self._current_player]
         self._current_player = 1 - self._current_player
         return player
+
+    def get_current_player(self):
+        return self._players[self._current_player]
+
+    def add_player(self, player):
+        self._players.append(player)
+
+    def get_score(self):
+        return self._score
 
     def fire_laser(self, player):
         board = self._board.native_board
