@@ -20,7 +20,7 @@ class ConsoleUI(UI):
 
         if action_type == ActionType.ROTATE:
             rotation = self._input_wrapper(lambda: self._choose_rotation())
-            return Action(action_type, origin, rotate=rotation)
+            return Action(action_type, origin, rotation=rotation)
         else:
             destination = self._input_wrapper(lambda: self._choose_destination(color, board, origin, action_type))
             return Action(action_type, origin, destination)
@@ -79,6 +79,7 @@ class ConsoleUI(UI):
             board[point.i][point.j] = char
 
         self._print_board(board)
+        print(Color.WHITE.value + '-------------------')
 
     def _print_board(self, board):
         for i in range(len(board)):

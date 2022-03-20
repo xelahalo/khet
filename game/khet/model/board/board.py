@@ -29,7 +29,7 @@ class Board:
         return isinstance(piece, Piece) and color == piece.color
 
     def can_move_piece_to(self, origin, destination, color, action_type):
-        color_mask = COLOR_MASKS.get(color)
+        color_mask = COLOR_MASKS[color]
         origin_piece = self._native_board[origin.i][origin.j]
         dest_obj = self._native_board[destination.i][destination.j]
 
@@ -43,7 +43,7 @@ class Board:
         elif origin.i == destination.i and origin.j == destination.j:
             return False
         # tile is of the other player's color
-        elif BOARD_MASK[destination.i + 1][destination.j + 1] != color_mask:
+        elif BOARD_MASK[destination.i + 1][destination.j + 1] > 0 and BOARD_MASK[destination.i + 1][destination.j + 1] != color_mask:
             return False
         # tile is occupied by another piece
         elif isinstance(dest_obj, Piece):
@@ -62,17 +62,16 @@ class Board:
         obj = self._native_board[point.i][point.j]
         return isinstance(obj, Stackable) and obj.is_stacked()
 
-    def _parse_board(self, config):
-        board = []
-        for i in range(len(config)):
-            row = []
-            for j in range(len(config[i])):
-                c = config[i][j]
-                row.append(self._parse_tile(i, j) if len(c) == 1 else self._parse_piece(c))
-            board.append(row)
-        return board
+    def get_obj(self, point):
+        return self._native_board[point.i][point.j]
 
-    def _parse_tile(self, i, j):
+    def update_obj(self, point, obj):
+        self._native_board[point.i][point.j] = obj
+
+    def update_piece_rotation(self, point, rotation):
+        self._native_board[point.i][point.j].rotate(rotation)
+
+    def parse_tile(self, i, j):
         n = BOARD_MASK[i+1][j+1]
         if n > 1:
             return Tile(Color.BLUE)
@@ -80,6 +79,17 @@ class Board:
             return Tile(Color.RED)
         else:
             return Tile(Color.WHITE)
+
+    def _parse_board(self, config):
+        board = []
+        for i in range(len(config)):
+            row = []
+            for j in range(len(config[i])):
+                c = config[i][j]
+                row.append(self.parse_tile(i, j) if len(c) == 1 else self._parse_piece(c))
+            board.append(row)
+        return board
+
 
     def _parse_piece(self, c):
         return self._piece_factory.create(c)

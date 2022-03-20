@@ -3,8 +3,11 @@ import copy
 from game.khet.model.board.board import Board
 from game.khet.model.board.tile import Tile
 from game.khet.model.board.laser import Laser
-from game.util.constants import DIR_LASER_CHAR_MAP, Color, Direction, LaserChar
+from game.util.constants import DIR_LASER_CHAR_MAP, ActionType, Color, Direction, LaserChar
 from game.khet.model.point import Point
+from game.khet.model.pieces.djed import Djed
+from game.khet.model.pieces.obelisk import Obelisk
+from game.khet.model.pieces.pyramid import Pyramid
 
 class KhetGame:
     def __init__(self, config):
@@ -31,6 +34,38 @@ class KhetGame:
         return False
 
     def set_action(self, action):
+        """
+        It's the responsibility of the agent to check whether the move is valid or not.
+        To ensure validity, use Board.can_move_pice and Board.can_move_piece_to
+        """
+        if action.action_type == ActionType.ROTATE:
+            self.board.update_piece_rotation(action.destination, action.rotation)
+            return
+        else:
+            origin = self.board.get_obj(action.origin)
+            destination = self.board.get_obj(action.destination)
+
+            if action.action_type == ActionType.MOVE:
+                if isinstance(origin, Obelisk) and isinstance(destination, Obelisk) and not destination.is_stacked():
+                    self.board.update_obj(action.origin, self.board.parse_tile(action.origin.i, action.origin.j))
+                    destination.increment()
+                    return
+                elif isinstance(origin, Djed) and (isinstance(destination, Pyramid) or isinstance(destination, Obelisk)):
+                    self.board.update_obj(action.origin, destination)
+                    self.board.update_obj(action.destination, origin)
+                    return
+
+                self.board.update_obj(action.destination, origin)
+                self.board.update_obj(action.origin, self.board.parse_tile(action.origin.i, action.origin.j))
+                return
+            elif action.action_type == ActionType.UNSTACK:
+                origin.decrement()
+                if isinstance(destination, Obelisk) and not destination.is_stacked():
+                    destination.increment()
+                else:
+                    self.board.update_obj(action.destination, Obelisk(origin.color, 1))
+
+    def evaluate(self):
         pass
 
     def get_first_player(self):

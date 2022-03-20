@@ -1,7 +1,8 @@
 from game.util.constants import PYRAMID_DIRECTION_MAP, TileChar
 from game.khet.model.pieces.piece import Piece
+from game.khet.model.pieces.rotatable import Rotatable
 
-class Pyramid(Piece):
+class Pyramid(Piece, Rotatable):
     def __init__(self, color, rotation):
         super().__init__(color, rotation)
 
@@ -11,13 +12,11 @@ class Pyramid(Piece):
 
         if d == r or d == (r + 1) % 4:
             return True
-
-        negate = 1
-        if (r + 2) % 4 == d:
-            negate = negate * (-1)
         
         return PYRAMID_DIRECTION_MAP[r][source_dir]
     
+    def rotate(self, rotation):
+        self.rotation = (self.rotation + (90 * rotation.value)) % 360
 
     def __str__(self):
         return super().__str__(self._get_char())

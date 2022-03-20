@@ -1,19 +1,17 @@
-from game.util.constants import Direction, TileChar
+from game.util.constants import DJED_DIRECTION_MAP, TileChar
 from game.khet.model.pieces.piece import Piece
+from game.khet.model.pieces.rotatable import Rotatable
 
-class Djed(Piece):
+class Djed(Piece, Rotatable):
     def __init__(self, color, rotation):
         super().__init__(color, rotation)
 
     def on_hit(self, source_dir):
-        parity = 1
-        if self._rotation == 0:
-            parity = 1 - parity
+        r = self.rotation // 90
+        return DJED_DIRECTION_MAP[r][source_dir]
 
-        if source_dir.value % 2 == parity:
-            return Direction._value2member_map_[source_dir.value + 1 % 4]
-        else:
-            return Direction._value2member_map_[source_dir.value - 1 % 4]
+    def rotate(self, _):
+        self.rotation = 90 - self.rotation
 
     def __str__(self):
         return super().__str__(self._get_char())

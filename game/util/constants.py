@@ -1,5 +1,6 @@
 from enum import Enum
 from tkinter import HORIZONTAL
+from turtle import down
 
 class ActionType(Enum):
     MOVE = 'move'
@@ -8,8 +9,8 @@ class ActionType(Enum):
 
 class Rotate(Enum):
     CLOCKWISE = 1
-    COUNTER_CLOCKWISE = 0
-    NO_ROTATION = -1
+    COUNTER_CLOCKWISE = -1
+    NO_ROTATION = 0
 
 class Direction(Enum):
     LEFT = 0
@@ -73,7 +74,7 @@ DIR_LASER_CHAR_MAP = {
     }
 }
 
-PYRAMID_DIRECTION_MAP =[
+PYRAMID_DIRECTION_MAP = [
     {
         Direction.DOWN: Direction.LEFT,
         Direction.RIGHT: Direction.UP
@@ -89,5 +90,20 @@ PYRAMID_DIRECTION_MAP =[
     {
         Direction.RIGHT: Direction.DOWN,
         Direction.UP: Direction.LEFT
+    }
+]
+
+DJED_DIRECTION_MAP = [
+    {
+        Direction.LEFT: Direction.DOWN,
+        Direction.UP: Direction.RIGHT,
+        Direction.RIGHT: Direction.UP,
+        Direction.DOWN: Direction.LEFT
+    },
+    {
+        Direction.LEFT: Direction.UP,
+        Direction.UP: Direction.LEFT,
+        Direction.RIGHT: Direction.DOWN,
+        Direction.DOWN: Direction.RIGHT
     }
 ]
