@@ -1,12 +1,18 @@
+import copy
+from sre_parse import State
+
 from game.khet.model.board.tile import Tile
 from game.util.configurations import BOARD_MASK
-from game.util.constants import COLOR_MASKS, ActionType, Color
+from game.util.constants import COLOR_MASKS, ActionType, Color, Rotate
 from game.khet.factory.piece_factory import PieceFactory
 from game.khet.model.pieces.piece import Piece
 from game.khet.model.pieces.djed import Djed
 from game.khet.model.pieces.obelisk import Obelisk
 from game.khet.model.pieces.pyramid import Pyramid
 from game.khet.model.pieces.stackable import Stackable
+from game.khet.model.pieces.rotatable import Rotatable
+from game.khet.model.point import Point
+from game.khet.model.action import Action
 
 class Board:
     def __init__(self, config):
@@ -21,6 +27,9 @@ class Board:
     def native_board(self, value):
         self._native_board = value
 
+    def copy(self):
+        return copy.deepcopy(self)
+
     def out_of_bounds(self, i, j):
         return i < 0 or j < 0 or i >= len(self._native_board) or j >= len(self._native_board[i])
 
@@ -34,25 +43,30 @@ class Board:
         dest_obj = self._native_board[destination.i][destination.j]
 
         # wall is chosen
-        if BOARD_MASK[destination.i][destination.j] < 0:
+        if BOARD_MASK[destination.i + 1][destination.j + 1] < 0:
             return False
         # destination is not within 1 tile
-        elif abs(origin.i - destination.i) > 1 or abs(origin.j - destination.j) > 1:
+        if abs(origin.i - destination.i) > 1 or abs(origin.j - destination.j) > 1:
             return False
         # can't stay in place
-        elif origin.i == destination.i and origin.j == destination.j:
+        if origin.i == destination.i and origin.j == destination.j:
             return False
         # tile is of the other player's color
-        elif BOARD_MASK[destination.i + 1][destination.j + 1] > 0 and BOARD_MASK[destination.i + 1][destination.j + 1] != color_mask:
+        if BOARD_MASK[destination.i + 1][destination.j + 1] > 0 and BOARD_MASK[destination.i + 1][destination.j + 1] != color_mask:
             return False
         # tile is occupied by another piece
-        elif isinstance(dest_obj, Piece):
+        if isinstance(dest_obj, Piece):
             if not isinstance(origin_piece, Djed) and not isinstance(origin_piece, Stackable):
                 return False
         # djeds can switch places with pyramids or obelisks
-        elif isinstance(origin_piece, Djed) and not(isinstance(dest_obj, Pyramid) or isinstance(dest_obj, Obelisk)):
+        if isinstance(origin_piece, Djed) and not(isinstance(dest_obj, Pyramid) or isinstance(dest_obj, Obelisk)):
             return False
-        elif isinstance(dest_obj, Stackable):
+        if isinstance(dest_obj, Stackable):
+            if not action_type == ActionType.UNSTACK or dest_obj.is_stacked():
+                return False
+        if isinstance(origin_piece, Stackable):
+            if not isinstance(dest_obj, Stackable):
+                return False
             if not action_type == ActionType.UNSTACK or dest_obj.is_stacked():
                 return False
 
@@ -79,6 +93,31 @@ class Board:
             return Tile(Color.RED)
         else:
             return Tile(Color.WHITE)
+
+    def get_possible_actions(self, color):
+        possible_actions = []
+
+        for i in range(len(self._native_board)):
+            for j in range(len(self._native_board[i])):
+                p = Point(i,j)
+                if not self.can_move_piece(p, color):
+                    continue
+
+                if isinstance(self._native_board[i][j], Rotatable):
+                    possible_actions.append(Action(ActionType.ROTATE, p, rotation=Rotate.CLOCKWISE))
+                    possible_actions.append(Action(ActionType.ROTATE, p, rotation=Rotate.COUNTER_CLOCKWISE))
+                
+                for k in range(-1, 2):
+                    for l in range(-1, 2):
+                        if i+k >= len(self._native_board) or j+l >= len(self._native_board[0]) or i+k < 0 or j+l < 0:
+                            continue
+                        q = Point(i+k, j+l)
+
+                        if self.can_move_piece_to(p, q, color, ActionType.MOVE):
+                            possible_actions.append(Action(ActionType.MOVE, p, q))
+                        if self.can_unstack_piece(p) and self.can_move_piece_to(p, q, color, ActionType.UNSTACK):
+                            possible_actions.append(Action(ActionType.UNSTACK, p, q))
+        return possible_actions
 
     def _parse_board(self, config):
         board = []

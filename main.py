@@ -1,4 +1,5 @@
 # https://www.ultraboardgames.com/khet-the-laser-game/game-rules.php
+from ai.monte_carlo import MonteCarloStrategy
 from game.engine.engine import Engine
 from game.util.configurations import CLASSIC
 from game.util.constants import TURN_ORDER
@@ -10,8 +11,10 @@ def main():
     ui = ConsoleUI()
     game = KhetGame(CLASSIC)
 
-    player1 = HumanStrategy(TURN_ORDER[0], game.board, ui)
-    player2 = HumanStrategy(TURN_ORDER[1], game.board, ui)
+    player1 = MonteCarloStrategy(TURN_ORDER[0], game.board.copy())
+    # player1 = HumanStrategy(TURN_ORDER[0], game.board.copy(), ui)
+    player2 = MonteCarloStrategy(TURN_ORDER[1], game.board.copy())
+    # player2 = HumanStrategy(TURN_ORDER[1], game.board.copy(), ui)
 
     game.add_player(player1)
     game.add_player(player2)

@@ -9,12 +9,11 @@ class Engine:
         self._ui.draw(self._game)
 
         while not self._game.is_finished:
-            player = self._game.get_next_player()
+            player = self._game.get_current_player()
             self._ui.set_teminal_color(player.color)
 
             action = player.get_action(self._game.copy())    
             self._game.set_action(action)
-            self._game.evaluate(player)
 
             self._ui.draw(self._game)
 

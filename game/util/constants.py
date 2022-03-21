@@ -1,6 +1,4 @@
 from enum import Enum
-from tkinter import HORIZONTAL
-from turtle import down
 
 class ActionType(Enum):
     MOVE = 'move'

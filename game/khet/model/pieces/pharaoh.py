@@ -1,5 +1,3 @@
-from decimal import Decimal
-
 from game.util.constants import TileChar
 from game.khet.model.pieces.piece import Piece
 
@@ -8,7 +6,7 @@ class Pharaoh(Piece):
         super().__init__(color, rotation)
 
     def get_value(self):
-        return Decimal('Infinity')
+        return float('inf')
 
     def on_hit(self, _):
         return True

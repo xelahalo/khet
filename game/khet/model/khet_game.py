@@ -45,7 +45,6 @@ class KhetGame:
         """
         if action.action_type == ActionType.ROTATE:
             self.board.update_piece_rotation(action.destination, action.rotation)
-            return
         else:
             origin = self.board.get_obj(action.origin)
             destination = self.board.get_obj(action.destination)
@@ -54,15 +53,15 @@ class KhetGame:
                 if isinstance(origin, Obelisk) and isinstance(destination, Obelisk) and not destination.is_stacked():
                     self.board.update_obj(action.origin, self.board.parse_tile(action.origin.i, action.origin.j))
                     destination.increment()
-                    return
+                    return self.evaluate()
                 elif isinstance(origin, Djed) and (isinstance(destination, Pyramid) or isinstance(destination, Obelisk)):
                     self.board.update_obj(action.origin, destination)
                     self.board.update_obj(action.destination, origin)
-                    return
+                    return self.evaluate()
 
                 self.board.update_obj(action.destination, origin)
                 self.board.update_obj(action.origin, self.board.parse_tile(action.origin.i, action.origin.j))
-                return
+                
             elif action.action_type == ActionType.UNSTACK:
                 origin.decrement()
                 if isinstance(destination, Obelisk) and not destination.is_stacked():
@@ -70,7 +69,10 @@ class KhetGame:
                 else:
                     self.board.update_obj(action.destination, Obelisk(origin.color, 1))
 
-    def evaluate(self, player):
+        return self.evaluate()
+
+    def evaluate(self):
+        player = self.get_current_player()
         pos_of_obj = self.fire_laser(player)
 
         if pos_of_obj is not None:
@@ -84,11 +86,11 @@ class KhetGame:
 
             if isinstance(obj, Pharaoh):
                 self._is_finished = True
+        
+        self.next_player()
 
-    def get_next_player(self):
-        player = self._players[self._current_player]
+    def next_player(self):
         self._current_player = 1 - self._current_player
-        return player
 
     def get_current_player(self):
         return self._players[self._current_player]

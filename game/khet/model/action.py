@@ -24,4 +24,4 @@ class Action:
         return self._action_type
 
     def __str__(self):
-        return self._action_type.value + ': ' + (str(self.destination) if self._action_type == ActionType.Move else str(self.rotate.value))
+        return self._action_type.value + ': ' + (str(self.destination) if self._action_type == ActionType.MOVE else str(self.rotation.value))
