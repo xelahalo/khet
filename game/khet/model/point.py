@@ -16,4 +16,7 @@ class Point:
     def j(self):
         return self._j
 
+    def __str__(self):
+        return str(self._i) + ',' + str(self._j)
+
     

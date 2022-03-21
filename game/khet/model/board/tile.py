@@ -8,5 +8,8 @@ class Tile:
     def color(self):
         return self._color
 
+    def copy(self):
+        return Tile(self._color)
+
     def __str__(self):
         return self._color.value + TileChar.TILE.value

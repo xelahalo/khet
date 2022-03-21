@@ -1,4 +1,5 @@
 from game.util.constants import Color
+import gc
 
 class Engine:
     def __init__(self, game, ui):
@@ -13,6 +14,7 @@ class Engine:
             self._ui.set_teminal_color(player.color)
 
             action = player.get_action(self._game.copy())    
+            gc.collect()
             self._game.set_action(action)
 
             self._ui.draw(self._game)

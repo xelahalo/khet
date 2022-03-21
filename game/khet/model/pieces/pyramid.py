@@ -21,6 +21,9 @@ class Pyramid(Piece, Rotatable):
     def get_value(self):
         return 75000
 
+    def copy(self):
+        return Pyramid(self._color, self._rotation)
+
     def __str__(self):
         return super().__str__(self._get_char())
 

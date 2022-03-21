@@ -23,6 +23,10 @@ class Piece(ABC):
         pass
 
     @abstractclassmethod
+    def copy(self):
+        pass
+
+    @abstractclassmethod
     def on_hit(self, source_dir):
         """
         Returns:

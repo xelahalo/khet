@@ -5,20 +5,21 @@ from timeit import default_timer as timer
 from game.util.constants import Color
 from game.khet.strategies.strategy import Strategy
 
-from ai.parameters import D_MAX
+from ai.parameters import D_MAX, MC_ITERATION_COUNT
 from ai.node import Node
 
 class MonteCarloStrategy(Strategy):
-    def __init__(self, color, board):
-        super().__init__(color, board)
+    def __init__(self, color):
+        super().__init__(color)
         self._current_node = None
         self._root = None
 
     def get_action(self, game):
         self._current_node = self._init_tree(game)
 
-        start = timer()
-        while timer() - start < 5:
+        # start = timer()
+        # while timer() - start < 10:
+        for _ in range(MC_ITERATION_COUNT):
             while not self._current_node.is_leaf():
                 self._current_node = UCB.find_best_node_with_UCB(self._current_node)
 

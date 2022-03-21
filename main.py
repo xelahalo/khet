@@ -11,10 +11,10 @@ def main():
     ui = ConsoleUI()
     game = KhetGame(CLASSIC)
 
-    player1 = MonteCarloStrategy(TURN_ORDER[0], game.board.copy())
-    # player1 = HumanStrategy(TURN_ORDER[0], game.board.copy(), ui)
-    player2 = MonteCarloStrategy(TURN_ORDER[1], game.board.copy())
-    # player2 = HumanStrategy(TURN_ORDER[1], game.board.copy(), ui)
+    player1 = MonteCarloStrategy(TURN_ORDER[0])
+    # player1 = HumanStrategy(TURN_ORDER[0], ui)
+    player2 = MonteCarloStrategy(TURN_ORDER[1])
+    # player2 = HumanStrategy(TURN_ORDER[1], ui)
 
     game.add_player(player1)
     game.add_player(player2)

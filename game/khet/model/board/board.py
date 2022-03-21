@@ -15,9 +15,9 @@ from game.khet.model.point import Point
 from game.khet.model.action import Action
 
 class Board:
-    def __init__(self, config):
+    def __init__(self, config, native_board=None):
         self._piece_factory = PieceFactory()
-        self._native_board = self._parse_board(config)
+        self._native_board = self._parse_board(config) if native_board is None else native_board
 
     @property
     def native_board(self):
@@ -28,7 +28,14 @@ class Board:
         self._native_board = value
 
     def copy(self):
-        return copy.deepcopy(self)
+        board = []
+        for i in range(len(self._native_board)):
+            row = []
+            for j in range(len(self._native_board[i])):
+                row.append(self._native_board[i][j].copy())
+            board.append(row)
+        
+        return Board(None, board)
 
     def out_of_bounds(self, i, j):
         return i < 0 or j < 0 or i >= len(self._native_board) or j >= len(self._native_board[i])
@@ -59,7 +66,7 @@ class Board:
             if not isinstance(origin_piece, Djed) and not isinstance(origin_piece, Stackable):
                 return False
         # djeds can switch places with pyramids or obelisks
-        if isinstance(origin_piece, Djed) and not(isinstance(dest_obj, Pyramid) or isinstance(dest_obj, Obelisk)):
+        if isinstance(origin_piece, Djed) and not(isinstance(dest_obj, Pyramid) or isinstance(dest_obj, Obelisk) or isinstance(dest_obj, Tile)):
             return False
         if isinstance(dest_obj, Stackable):
             if not action_type == ActionType.UNSTACK or dest_obj.is_stacked():

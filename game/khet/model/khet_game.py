@@ -1,4 +1,4 @@
-import copy
+import math
 
 from game.khet.model.board.board import Board
 from game.khet.model.board.tile import Tile
@@ -11,14 +11,14 @@ from game.khet.model.pieces.pyramid import Pyramid
 from game.khet.model.pieces.pharaoh import Pharaoh
 
 class KhetGame:
-    def __init__(self, config):
+    def __init__(self, config, board=None, players=None, current_player=None, laser_path=None, is_finished=None, score=None):
         self._config = config
-        self._board = Board(config)
-        self._players = []
-        self._current_player = 0
-        self._laser_path = []
-        self._is_finished = False
-        self._score = 0 # player 1 is positive player 2 is negative (zero-sum game)
+        self._board = Board(config) if board is None else board
+        self._players = [] if players is None else players
+        self._current_player = 0 if current_player is None else current_player
+        self._laser_path = [] if laser_path is None else laser_path
+        self._is_finished = False if is_finished is None else is_finished
+        self._score = 0 if score is None else score # player 1 is positive player 2 is negative (zero-sum game)
 
     @property
     def board(self):
@@ -33,7 +33,7 @@ class KhetGame:
         return self._is_finished
 
     def copy(self):
-        return copy.deepcopy(self)
+        return KhetGame(self._config, self._board.copy(), self._players, self._current_player, self._laser_path, self._is_finished, self._score)
 
     def get_winner(self):
         return self._players[0] if self._score > 0 else self._players[1]
@@ -108,6 +108,10 @@ class KhetGame:
         if player.color == Color.BLUE:
             i, j, d = len(board)-1, len(board[i])-1, Direction.UP
 
+        if not isinstance(board[i][j], Tile):
+            self._laser_path = []
+            return Point(i,j)
+        
         path = [(Point(i, j), Laser(LaserChar.VERTICAL))]
 
         while True:

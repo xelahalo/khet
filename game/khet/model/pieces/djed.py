@@ -16,6 +16,9 @@ class Djed(Piece, Rotatable):
     def get_value(self):
         return 0
 
+    def copy(self):
+        return Djed(self._color, self._rotation)
+
     def __str__(self):
         return super().__str__(self._get_char())
 

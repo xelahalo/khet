@@ -1,9 +1,8 @@
 from abc import ABC, abstractclassmethod
 
 class Strategy(ABC):
-    def __init__(self, color, board):
+    def __init__(self, color):
         self._color = color
-        self._board = board
 
     @abstractclassmethod
     def get_action(self, game):
