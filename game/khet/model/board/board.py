@@ -1,6 +1,3 @@
-import copy
-from sre_parse import State
-
 from game.khet.model.board.tile import Tile
 from game.util.configurations import BOARD_MASK
 from game.util.constants import COLOR_MASKS, ActionType, Color, Rotate

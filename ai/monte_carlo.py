@@ -1,6 +1,5 @@
 import ai.ucb as UCB
 import random as rng
-from timeit import default_timer as timer
 
 from game.util.constants import Color
 from game.khet.strategies.strategy import Strategy
@@ -77,15 +76,4 @@ class MonteCarloStrategy(Strategy):
 
         score = game_copy.get_score()
 
-        self._back_propagate(self._current_node, score)        
-
-    # def debug(self, game):
-    #     c = 0
-    #     b = game.board._native_board
-    #     for i in range(len(b)):
-    #         for j in range(len(b[i])):
-    #             if isinstance(b[i][j], Pharaoh):
-    #                 c = c + 1
-
-    #     if c < 2:
-    #         print(':((((')
+        self._back_propagate(self._current_node, score)

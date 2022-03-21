@@ -1,5 +1,3 @@
-import math
-
 from game.khet.model.board.board import Board
 from game.khet.model.board.tile import Tile
 from game.khet.model.board.laser import Laser

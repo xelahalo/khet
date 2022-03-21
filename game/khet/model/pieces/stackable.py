@@ -1,5 +1,3 @@
-from abc import ABC, abstractclassmethod
-
 from game.khet.model.pieces.piece import Piece
 
 class Stackable(Piece):
