@@ -16,8 +16,6 @@ class MonteCarloStrategy(Strategy):
     def get_action(self, game):
         self._current_node = self._init_tree(game)
 
-        # start = timer()
-        # while timer() - start < 10:
         for _ in range(MC_ITERATION_COUNT):
             while not self._current_node.is_leaf():
                 self._current_node = UCB.find_best_node_with_UCB(self._current_node)
